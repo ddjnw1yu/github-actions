@@ -25,7 +25,9 @@ jobs:
       - uses: actions-cool/check-user-permission@v2
         id: check
         with:
-          require: 'write'
+          require: "write"
+          username: ${{ github.event.pull_request.user.name }}
+          check-bot: true
           check-contributor: true
 
       - run: echo "pull-request-name = ${{ github.event.pull_request.user.name }}"
