@@ -27,6 +27,7 @@ jobs:
         with:
           require: "write"
           username: ${{ github.event.pull_request.user.login }}
+          check-contributor: true
 
       - run: echo "pull-request-login = ${{ github.event.pull_request.user.login }}"
       - run: echo "user-permission = ${{ steps.check.outputs.user-permission }}"
