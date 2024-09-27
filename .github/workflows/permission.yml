@@ -28,7 +28,7 @@ jobs:
           require: 'write'
           check-contributor: true
 
-      - run: echo "pull-request-user = ${{ github.event.pull_request.user }}"
+      - run: echo "pull-request-name = ${{ github.event.pull_request.user.name }}"
       - run: echo "pull-request-login = ${{ github.event.pull_request.user.login }}"
       - run: echo "user-permission = ${{ steps.check.outputs.user-permission }}"
       - run: echo "require-result = ${{ steps.check.outputs.require-result }}"
