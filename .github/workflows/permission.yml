@@ -25,9 +25,11 @@ jobs:
       - uses: actions-cool/check-user-permission@v2
         id: check
         with:
-          require: 'write'
+          require: "write"
+          username: ${{ github.event.pull_request.user.login }}
           check-contributor: true
 
+      - run: echo "pull-request-login = ${{ github.event.pull_request.user.login }}"
       - run: echo "user-permission = ${{ steps.check.outputs.user-permission }}"
       - run: echo "require-result = ${{ steps.check.outputs.require-result }}"
       - run: echo "check-result = ${{ steps.check.outputs.check-result }}"
