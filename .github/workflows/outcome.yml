@@ -22,6 +22,9 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: Try to fail
+        run: exit 1
+        
       - name: Step 1
         id: hello
         run: |
@@ -42,3 +45,11 @@ jobs:
         env:
           STEPS_CONTEXT: ${{ toJson(steps) }}
         run: echo "$STEPS_CONTEXT"
+
+      - name: Get previous workflow status
+        uses: Mercymeilya/last-workflow-status@v0.3.3
+        id: last_status
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Check workflow
+        run: "previous workflow = ${{ steps.last_status }}"
