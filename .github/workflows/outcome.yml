@@ -49,4 +49,4 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Check workflow
-        run: "previous workflow = ${{ steps.last_status.outputs }}"
+        run: echo "previous workflow = ${{ steps.last_status.outputs }}"
