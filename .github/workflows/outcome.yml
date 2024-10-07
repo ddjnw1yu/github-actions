@@ -31,5 +31,6 @@ jobs:
         run: echo "this is step 2" 
         continue-on-error: true
       - name: Check outcomes
-        run: echo "step 1 = ${{ steps.hello.outcome }}"
-        run: echo "step 2 = ${{ steps.world.outcome }}"
+        run: |
+          echo "step 1 = ${{ steps.hello.outcome }}"
+          echo "step 2 = ${{ steps.world.outcome }}"
