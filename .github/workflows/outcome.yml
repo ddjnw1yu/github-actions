@@ -24,6 +24,7 @@ jobs:
     steps:
       # - name: Try to fail
       #   run: exit 1
+      #   continue-on-error: true
         
       - name: Step 1
         id: hello
@@ -48,8 +49,24 @@ jobs:
 
       - name: Get previous workflow status
         uses: Mercymeilya/last-workflow-status@v0.3.3
-        id: last_status
+        id: workflow
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Check workflow
-        run: echo "previous workflow = ${{ toJson(steps.last_status) }}"
+        run: echo "previous workflow = ${{ toJson(steps.workflow.outputs) }}"
+
+      - name: Keep success
+        if: ${{success()} && steps.workflow.outputs.last_status === "success"}
+        run: echo "Keep success"
+      
+      - name: Back to normal
+        if: ${{success() && steps.workflow.outputs.last_status === "failure"}}
+        run: echo "Back to normal"
+        
+      - name: Failure
+        if: ${{failure() && steps.workflow.outputs.last_status === "success"}}
+        run: echo "Failure"
+        
+      - name: Still failure
+        if: ${{failure() && steps.workflow.outputs.last_status === "failure"}}
+        run: echo "Still failure"
