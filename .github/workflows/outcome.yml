@@ -56,7 +56,7 @@ jobs:
         run: echo "previous workflow = ${{ toJson(steps.workflow.outputs) }}"
 
       - name: Keep success
-        if: ${{success()} && steps.workflow.outputs.last_status === "success"}
+        if: ${{success()} && steps.workflow.outputs.last_status === "success"}}
         run: echo "Keep success"
       
       - name: Back to normal
