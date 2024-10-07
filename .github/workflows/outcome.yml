@@ -24,13 +24,21 @@ jobs:
     steps:
       - name: Step 1
         id: hello
-        run: echo "this is step 1"
+        run: |
+          echo "this is step 1"
+          echo ::set-output name=status::failure
         continue-on-error: true
       - name: Step 2
         id: world
-        run: echo "this is step 2" 
+        run: |
+          echo "this is step 2" 
+          echo ::set-output name=status::success
         continue-on-error: true
       - name: Check outcomes
         run: |
           echo "step 1 = ${{ steps.hello.outcome }}"
           echo "step 2 = ${{ steps.world.outcome }}"
+      - name: Dump steps context
+        env:
+          STEPS_CONTEXT: ${{ toJson(steps) }}
+        run: echo "$STEPS_CONTEXT"
