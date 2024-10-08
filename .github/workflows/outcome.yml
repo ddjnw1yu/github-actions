@@ -42,23 +42,23 @@ jobs:
             echo "P_WORKFLOW=${{ steps.workflow.outputs.last_status }}" >> $GITHUB_ENV
 
       - name: Keep success
-        if: $C_STEP == 'success' && $P_WORKFLOW == 'success'
+        if: env.C_STEP == 'success' && env.P_WORKFLOW == 'success'
         run: |
             echo "keepsuccess"
             echo "value=keepsuccess"
       - name: Back to normal
-        if: $C_STEP == 'success' && $P_WORKFLOW == 'failure'
+        if: env.C_STEP == 'success' && env.P_WORKFLOW == 'failure'
         run: |
             echo "backtonormal"
             echo "value=backtonormal"
       - name: Failure
-        if: $C_STEP == 'failure' && $P_WORKFLOW == 'success' 
+        if: env.C_STEP == 'failure' && env.P_WORKFLOW == 'success' 
         run: |
             echo "failure"
             echo "value=failure"
             exit 1
       - name: Keep failure
-        if: $C_STEP == 'failure' && $P_WORKFLOW == 'failure'
+        if: env.C_STEP == 'failure' && env.P_WORKFLOW == 'failure'
         run: |
             echo "keepfailure"
             echo "value=keepfailure"
