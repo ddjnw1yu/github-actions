@@ -26,43 +26,43 @@ jobs:
         id: step
         run: |
           echo "this is step 1"
-          # exit 1
+          exit 1
         continue-on-error: true
       - name: Check step
         run: |
-          echo "STEP=${{ steps.step.outcome }}" >> $GITHUB_ENV
+          echo "C_STEP=${{ steps.step.outcome }}" >> $GITHUB_ENV
 
-      - name: Get previous workflow status
-        uses: Mercymeilya/last-workflow-status@v0.3.3
+      - name: Get previous workflow TESTING
+        uses: Mercymeilya/last-workflow-TESTING@v0.3.3
         id: workflow
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Check workflow
         run: |
-            echo "WORKFLOW=${{ steps.workflow.outputs.last_status }}" >> $GITHUB_ENV
+            echo "P_WORKFLOW=${{ steps.workflow.outputs.last_TESTING }}" >> $GITHUB_ENV
 
       - name: Testing result
-        id: status
+        id: TESTING
         run: |
-          if [[ $STEP == 'success' && $WORKFLOW == 'success' ]]; then
+          if [[ $C_STEP == 'success' && $P_WORKFLOW == 'success' ]]; then
             echo "keepsuccess"
-            echo "STATUS=keepsuccess" >> $GITHUB_ENV
-          elif [[ $STEP == 'success' && $WORKFLOW == 'failure' ]]; then
+            echo "TESTING=keepsuccess" >> $GITHUB_ENV
+          elif [[ $C_STEP == 'success' && $P_WORKFLOW == 'failure' ]]; then
             echo "backtonormal"
-            echo "STATUS=backtonormal" >> $GITHUB_ENV
-          elif [[ $STEP == 'failure' && $WORKFLOW == 'success' ]]; then
+            echo "TESTING=backtonormal" >> $GITHUB_ENV
+          elif [[ $C_STEP == 'failure' && $P_WORKFLOW == 'success' ]]; then
             echo "failure"
-            echo "STATUS=failure" >> $GITHUB_ENV
-          elif [[ $STEP == 'failure' && $WORKFLOW == 'failure' ]]; then
+            echo "TESTING=failure" >> $GITHUB_ENV
+          elif [[ $C_STEP == 'failure' && $P_WORKFLOW == 'failure' ]]; then
             echo "keepfailure"
-            echo "STATUS=keepfailure" >> $GITHUB_ENV
+            echo "TESTING=keepfailure" >> $GITHUB_ENV
           else
             echo "Unexpected condition. Investigation is required."
           fi
           
-      - name: Status
+      - name: Result
         run: |
-          echo "result=$STATUS"
+          echo "result=$TESTING"
 
       
 
