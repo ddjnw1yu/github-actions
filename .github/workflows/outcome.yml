@@ -40,7 +40,14 @@ jobs:
       - name: Check workflow
         run: |
             echo "P_WORKFLOW=${{ steps.workflow.outputs.last_status }}" >> $GITHUB_ENV
+            
+  # This workflow contains a single job called "build"
+  print:
+    # The type of runner that the job will run on
+    runs-on: ubuntu-latest
 
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
       - name: Keep success
         if: env.C_STEP == 'success' && env.P_WORKFLOW == 'success'
         run: |
