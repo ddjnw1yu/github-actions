@@ -62,7 +62,7 @@ jobs:
           
       - name: Status
         run: |
-          echo "result=${{ $STATUS }}"
+          echo "result=$STATUS"
 
       
 
