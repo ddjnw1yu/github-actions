@@ -21,8 +21,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      outcome: ${{ steps.outcome.outcome }}
-      workflow: ${{ steps.workflow.outputs.last_status }}
+      status: ${{ steps.outcome.outcome }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -45,6 +44,19 @@ jobs:
         run: |
             echo "workflow=${{ steps.workflow.outputs.last_status }}"
 
+      - name: Keep success
+        if: steps.outcome.outcome == 'success' && steps.workflow.outputs.last_statusw == 'success'
+        run: echo "value=keepsuccess" >> $GITHUB_OUTPUT
+      - name: Back to normal
+        if: steps.outcome.outcome == 'success' && steps.workflow.outputs.last_status== 'failure'
+        run: echo "value=backtonormal" >> $GITHUB_OUTPUT
+      - name: Failure
+        if: steps.outcome.outcome == 'failure' && steps.workflow.outputs.last_status == 'success'
+        run: echo "value=failure" >> $GITHUB_OUTPUT
+      - name: Still failure
+        if: steps.outcome.outcome == 'failure' && steps.workflow.outputs.last_status == 'failure'
+        run: echo "value=keepfailure" >> $GITHUB_OUTPUT
+          
   print:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
@@ -53,29 +65,10 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: print
+      - name: Status
         run: |
-          echo "outcome=${{ needs.check.outputs.outcome }}"
-          echo "workflow=${{ needs.check.outputs.workflow }}"
+          echo "result=${{ needs.check.outputs.status }}"
           
-      - name: Keep success
-        if: ${{needs.check.outputs.outcome == 'success' && needs.check.outputs.workflow == 'success'}}
-        run: echo "Keep success"
-      
-      - name: Back to normal
-        if: ${{needs.check.outputs.outcome == 'success' && needs.check.outputs.workflow == 'failure'}}
-        run: echo "Back to normal"
-        
-      - name: Failure
-        if: ${{needs.check.outputs.outcome == 'failure' && needs.check.outputs.workflow == 'success'}}
-        run: |
-          echo "Failure"
-          exit 1
-        
-      - name: Still failure
-        if: ${{needs.check.outputs.outcome == 'failure' && needs.check.outputs.workflow == 'failure'}}
-        run: |
-          echo "Still failure"
-          exit 1
+
       
 
