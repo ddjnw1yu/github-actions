@@ -29,7 +29,7 @@ jobs:
         id: step
         run: |
           echo "this is step 1"
-          exit 1
+          # exit 1
         
       - name: Get mock step outcome
         run: echo "${{ steps.step.outcome }}"
