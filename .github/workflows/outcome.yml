@@ -50,6 +50,11 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: echo
+        run: |
+            echo ${{ env.C_STEP }}
+            echo ${{ env.P_WORKFLOW }}
+            
       - name: Keep success
         if: env.C_STEP == 'success' && env.P_WORKFLOW == 'success'
         run: |
