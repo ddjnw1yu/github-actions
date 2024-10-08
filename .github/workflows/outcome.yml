@@ -56,17 +56,17 @@ jobs:
         run: echo "previous workflow = ${{ toJson(steps.workflow.outputs) }}"
 
       - name: Keep success
-        if: success() && steps.workflow.outputs.last_status == "success"
+        if: success() && steps.workflow.outputs.last_status == 'success'
         run: echo "Keep success"
       
       - name: Back to normal
-        if: success() && steps.workflow.outputs.last_status == "failure"
+        if: success() && steps.workflow.outputs.last_status == 'failure'
         run: echo "Back to normal"
         
       - name: Failure
-        if: failure() && steps.workflow.outputs.last_status == "success"
+        if: failure() && steps.workflow.outputs.last_status == 'success'
         run: echo "Failure"
         
       - name: Still failure
-        if: failure() && steps.workflow.outputs.last_status == "failure"
+        if: failure() && steps.workflow.outputs.last_status == 'failure'
         run: echo "Still failure"
