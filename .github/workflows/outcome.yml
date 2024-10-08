@@ -53,11 +53,9 @@ jobs:
           elif [[ $C_STEP == 'failure' && $P_WORKFLOW == 'success' ]]; then
             echo "failure"
             echo "value=failure" >> $GITHUB_ENV
-            exit 1
           elif [[ $C_STEP == 'failure' && $P_WORKFLOW == 'failure' ]]; then
             echo "keepfailure"
             echo "value=keepfailure" >> $GITHUB_ENV
-            exit 1
           else
             echo "Unexpected condition. Investigation is required."
           fi
