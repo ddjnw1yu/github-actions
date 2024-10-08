@@ -26,14 +26,14 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Get step outcome
-        id: outcome
+        id: step
         run: |
           echo "this is step 1"
           # exit 1
         continue-on-error: true
-      - name: Check outcomes
+      - name: Check step
         run: |
-          echo "outcome=${{ steps.outcome.outcome }}"
+          echo "step=${{ steps.step.outcome }}"
 
       - name: Get previous workflow status
         uses: Mercymeilya/last-workflow-status@v0.3.3
@@ -47,16 +47,16 @@ jobs:
       - name: Testing result
         id: status
         run: |
-          if [ steps.outcome.outcome == 'success' && steps.workflow.outputs.last_statusw == 'success' ]; then
+          if [ steps.step.outcome == 'success' && steps.workflow.outputs.last_status == 'success' ]; then
             echo "keepsuccess"
             echo "value=keepsuccess" >> $GITHUB_OUTPUT
-          elif [ steps.outcome.outcome == 'success' && steps.workflow.outputs.last_status== 'failure' ]; then
+          elif [ steps.step.outcome == 'success' && steps.workflow.outputs.last_status== 'failure' ]; then
             echo "backtonormal"
             echo "value=backtonormal" >> $GITHUB_OUTPUT
-          elif [ steps.outcome.outcome == 'failure' && steps.workflow.outputs.last_status == 'success' ]; then
+          elif [ steps.step.outcome == 'failure' && steps.workflow.outputs.last_status == 'success' ]; then
             echo "failure"
             echo "value=failure" >> $GITHUB_OUTPUT
-          elif [ steps.outcome.outcome == 'failure' && steps.workflow.outputs.last_status == 'failure' ]; then
+          elif [ steps.step.outcome == 'failure' && steps.workflow.outputs.last_status == 'failure' ]; then
             echo "keepfailure"
             echo "value=keepfailure" >> $GITHUB_OUTPUT
           else
