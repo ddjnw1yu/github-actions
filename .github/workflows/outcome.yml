@@ -21,12 +21,11 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      outcome: ${{ steps.step.outcome }}
-      last_status: ${{ steps.workflow.outputs.last_status }}
+      step-outcome: ${{ steps.step.outcome }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Get step outcome
+      - name: Get mock step outcome
         id: step
         run: |
           echo "this is step 1"
@@ -35,55 +34,40 @@ jobs:
       - name: Check step
         run: |
           echo "C_STEP=${{ steps.step.outcome }}"
-
-      - name: Get previous workflow
-        uses: Mercymeilya/last-workflow-status@v0.3.3
-        id: workflow
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-      - name: Check workflow
-        run: |
-            echo "P_WORKFLOW=${{ steps.workflow.outputs.last_status }}"
             
-  # This workflow contains a single job called "build"
   print:
-    # The type of runner that the job will run on
     runs-on: ubuntu-latest
 
     needs: check
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: echo
+      - name: Get previous workflow status
+        uses: Mercymeilya/last-workflow-status@v0.3.3
+        id: workflow
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Result
         run: |
-            echo ${{ needs.check.outputs.outcome }}
-            echo ${{ needs.check.outputs.last_status }}
-            
-      - name: Keep success
-        if: needs.check.outputs.outcome == 'success' && needs.check.outputs.last_status == 'success'
+          echo "C_STEP=${{ needs.quality-control-cypress-run.outputs.step-outcome }}" >> $GITHUB_ENV
+          echo "P_WORKFLOW=${{ steps.workflow.outputs.last_status }}" >> $GITHUB_ENV
+
+      - name: Get testing status
+        id: status
         run: |
-            echo "keepsuccess"
-            echo "value=keepsuccess"
-      - name: Back to normal
-        if: needs.check.outputs.outcome == 'success' && needs.check.outputs.last_status == 'failure'
+          if [[ $C_STEP == 'success' && $P_WORKFLOW == 'success' ]]; then
+            echo "value=keepsuccess" >> $GITHUB_OUTPUT
+          elif [[ $C_STEP == 'success' && $P_WORKFLOW == 'failure' ]]; then
+            echo "value=backtonormal" >> $GITHUB_OUTPUT
+          elif [[ $C_STEP == 'failure' && $P_WORKFLOW == 'success' ]]; then
+            echo "value=failure" >> $GITHUB_OUTPUT
+          elif [[ $C_STEP == 'failure' && $P_WORKFLOW == 'failure' ]]; then
+            echo "value=keepfailure" >> $GITHUB_OUTPUT
+          else
+            echo "Unexpected condition. Investigation is required."
+          fi
+
+      - name: Send notification to Slack
         run: |
-            echo "backtonormal"
-            echo "value=backtonormal"
-      - name: Failure
-        if: needs.check.outputs.outcome == 'failure' && needs.check.outputs.last_status == 'success' 
-        run: |
-            echo "failure"
-            echo "value=failure"
-            exit 1
-      - name: Keep failure
-        if: needs.check.outputs.outcome == 'failure' && needs.check.outputs.last_status == 'failure'
-        run: |
-            echo "keepfailure"
-            echo "value=keepfailure"
-            exit 1
-      - name: Unexpected
-        if: (needs.check.outputs.outcome != 'success' && needs.check.outputs.outcome != 'failure') || (needs.check.outputs.last_status != 'success' && needs.check.outputs.last_status != 'failure')
-        run: |
-            echo "unexpected"
-            echo "value=unexpected"
-            exit 1
+          echo "Testing status=${{ steps.status.value }}"
+          echo "Sending notification to Slack..."
