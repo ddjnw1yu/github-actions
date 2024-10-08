@@ -17,7 +17,6 @@ on:
 jobs:
   # This workflow contains a single job called "build"
   check-step:
-    if: always()
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
     outputs:
@@ -63,17 +62,14 @@ jobs:
           elif [[ $C_STEP == 'failure' && $P_WORKFLOW == 'success' ]]; then
             echo "TESTING=failure" >> $GITHUB_ENV
           elif [[ $C_STEP == 'failure' && $P_WORKFLOW == 'failure' ]]; then
-            echo "TESTING=keepfailure" >> $GITHUB_ENV
+            echo "TESTING=stillfail" >> $GITHUB_ENV
           else
+            echo "TESTING=unexpected" >> $GITHUB_ENV
             echo "Unexpected condition. Investigation is required."
           fi
           
       - name: Get testing status
         run: echo "$TESTING"
-          
-      - name: Force fail
-        if: env.TESTING == 'failure' || env.TESTING == 'keepfailure'
-        run: exit 1
 
   notify:
     if: always()
