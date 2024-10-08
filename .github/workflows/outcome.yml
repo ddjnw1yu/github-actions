@@ -23,26 +23,14 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Step 1
-        id: hello
+        id: step1
         run: |
           echo "this is step 1"
-          echo ::set-output name=status::failure
           exit 1
-        continue-on-error: true
-      - name: Step 2
-        id: world
-        run: |
-          echo "this is step 2" 
-          echo ::set-output name=status::success
         continue-on-error: true
       - name: Check outcomes
         run: |
-          echo "step 1 = ${{ steps.hello.outcome }}"
-          echo "step 2 = ${{ steps.world.outcome }}"
-      - name: Dump steps context
-        env:
-          STEPS_CONTEXT: ${{ toJson(steps) }}
-        run: echo "$STEPS_CONTEXT"
+          echo "step 1 = ${{ steps.step1.outcome }}"
 
       - name: Get previous workflow status
         uses: Mercymeilya/last-workflow-status@v0.3.3
@@ -53,17 +41,17 @@ jobs:
         run: echo "previous workflow = ${{ toJson(steps.workflow.outputs) }}"
 
       - name: Keep success
-        if: success() && steps.workflow.outputs.last_status == 'success'
+        if: steps.step1.outcome == 'success' && steps.workflow.outputs.last_status == 'success'
         run: echo "Keep success"
       
       - name: Back to normal
-        if: success() && steps.workflow.outputs.last_status == 'failure'
+        if: steps.step1.outcome == 'success' && steps.workflow.outputs.last_status == 'failure'
         run: echo "Back to normal"
         
       - name: Failure
-        if: failure() && steps.workflow.outputs.last_status == 'success'
+        if: steps.step1.outcome == 'failure' && steps.workflow.outputs.last_status == 'success'
         run: echo "Failure"
         
       - name: Still failure
-        if: failure() && steps.workflow.outputs.last_status == 'failure'
+        if: steps.step1.outcome == 'failure' && steps.workflow.outputs.last_status == 'failure'
         run: echo "Still failure"
