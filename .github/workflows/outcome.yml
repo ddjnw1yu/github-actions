@@ -61,6 +61,7 @@ jobs:
             echo "value=keepfailure" >> $GITHUB_OUTPUT
           else
             echo "none"
+          fi
           
   print:
     # The type of runner that the job will run on
