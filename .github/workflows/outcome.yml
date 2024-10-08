@@ -33,7 +33,7 @@ jobs:
         continue-on-error: true
       - name: Check step
         run: |
-          echo "STEP=${{ steps.step.outcome }} >> $GITHUB_ENV
+          echo "STEP=${{ steps.step.outcome }}" >> $GITHUB_ENV
 
       - name: Get previous workflow status
         uses: Mercymeilya/last-workflow-status@v0.3.3
@@ -42,7 +42,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Check workflow
         run: |
-            echo "WORKFLOW=${{ steps.workflow.outputs.last_status }} >> $GITHUB_ENV
+            echo "WORKFLOW=${{ steps.workflow.outputs.last_status }}" >> $GITHUB_ENV
 
       - name: Testing result
         id: status
