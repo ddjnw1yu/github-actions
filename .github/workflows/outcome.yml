@@ -59,20 +59,25 @@ jobs:
         run: |
           echo "P_WORKFLOW=${{ steps.workflow.outputs.last_status }}" >> $GITHUB_ENV
 
-      - name: Get testing status
-        id: status
+      - name: Check
+        id: result
         run: |
           if [[ $C_STEP == 'success' && $P_WORKFLOW == 'success' ]]; then
-            echo "value=keepsuccess" >> $GITHUB_OUTPUT
+            echo "value=keepsuccess"
           elif [[ $C_STEP == 'success' && $P_WORKFLOW == 'failure' ]]; then
-            echo "value=backtonormal" >> $GITHUB_OUTPUT
+            echo "value=backtonormal"
           elif [[ $C_STEP == 'failure' && $P_WORKFLOW == 'success' ]]; then
-            echo "value=failure" >> $GITHUB_OUTPUT
+            echo "value=failure"
           elif [[ $C_STEP == 'failure' && $P_WORKFLOW == 'failure' ]]; then
-            echo "value=keepfailure" >> $GITHUB_OUTPUT
+            echo "value=keepfailure"
           else
             echo "Unexpected condition. Investigation is required."
           fi
+          
+      - name: Get testing status
+        id: status
+        run: |
+          echo "vaule=${{ steps.result.value }}" >> $GITHUB_OUTPUT
 
   notify:
     runs-on: ubuntu-latest
