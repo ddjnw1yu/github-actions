@@ -25,14 +25,14 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      - name: Get mock step outcome
+      - name: Mock step outcome
         id: step
         run: |
           echo "this is step 1"
           # exit 1
         continue-on-error: true
         
-      - name: Print mock step outcome
+      - name: Get mock step outcome
         run: |
           echo "outcome=${{ steps.step.outcome }}" >> $GITHUB_OUTPUT
           
@@ -63,13 +63,13 @@ jobs:
         id: result
         run: |
           if [[ $C_STEP == 'success' && $P_WORKFLOW == 'success' ]]; then
-            echo "value=keepsuccess"
+            echo "TESTING=keepsuccess" >> $GITHUB_ENV
           elif [[ $C_STEP == 'success' && $P_WORKFLOW == 'failure' ]]; then
-            echo "value=backtonormal"
+            echo "TESTING=backtonormal" >> $GITHUB_ENV
           elif [[ $C_STEP == 'failure' && $P_WORKFLOW == 'success' ]]; then
-            echo "value=failure"
+            echo "TESTING=failure" >> $GITHUB_ENV
           elif [[ $C_STEP == 'failure' && $P_WORKFLOW == 'failure' ]]; then
-            echo "value=keepfailure"
+            echo "TESTING=keepfailure" >> $GITHUB_ENV
           else
             echo "Unexpected condition. Investigation is required."
           fi
@@ -77,7 +77,7 @@ jobs:
       - name: Get testing status
         id: status
         run: |
-          echo "vaule=${{ steps.result.value }}" >> $GITHUB_OUTPUT
+          echo "vaule=$TESTING" >> $GITHUB_OUTPUT
 
   notify:
     runs-on: ubuntu-latest
