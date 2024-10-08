@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      status: ${{ steps.outcome.outcome }}
+      status: ${{ steps.status.value }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -44,18 +44,23 @@ jobs:
         run: |
             echo "workflow=${{ steps.workflow.outputs.last_status }}"
 
-      - name: Keep success
-        if: steps.outcome.outcome == 'success' && steps.workflow.outputs.last_statusw == 'success'
-        run: echo "value=keepsuccess" >> $GITHUB_OUTPUT
-      - name: Back to normal
-        if: steps.outcome.outcome == 'success' && steps.workflow.outputs.last_status== 'failure'
-        run: echo "value=backtonormal" >> $GITHUB_OUTPUT
-      - name: Failure
-        if: steps.outcome.outcome == 'failure' && steps.workflow.outputs.last_status == 'success'
-        run: echo "value=failure" >> $GITHUB_OUTPUT
-      - name: Still failure
-        if: steps.outcome.outcome == 'failure' && steps.workflow.outputs.last_status == 'failure'
-        run: echo "value=keepfailure" >> $GITHUB_OUTPUT
+      - name: Testing result
+        id: status
+        run: |
+          if [ steps.outcome.outcome == 'success' && steps.workflow.outputs.last_statusw == 'success' ]; then
+            echo "keepsuccess"
+            echo "value=keepsuccess" >> $GITHUB_OUTPUT
+          elif [ steps.outcome.outcome == 'success' && steps.workflow.outputs.last_status== 'failure' ]; then
+            echo "backtonormal"
+            echo "value=backtonormal" >> $GITHUB_OUTPUT
+          elif [ steps.outcome.outcome == 'failure' && steps.workflow.outputs.last_status == 'success' ]; then
+            echo "failure"
+            echo "value=failure" >> $GITHUB_OUTPUT
+          elif [ steps.outcome.outcome == 'failure' && steps.workflow.outputs.last_status == 'failure' ]; then
+            echo "keepfailure"
+            echo "value=keepfailure" >> $GITHUB_OUTPUT
+          else
+            echo "none"
           
   print:
     # The type of runner that the job will run on
