@@ -47,16 +47,16 @@ jobs:
       - name: Testing result
         id: status
         run: |
-          if [ ${{steps.step.outcome}} == 'success' && ${{steps.workflow.outputs.last_status}} == 'success' ]; then
+          if [ '${{steps.step.outcome}}' == 'success' && '${{steps.workflow.outputs.last_status}}' == 'success' ]; then
             echo "keepsuccess"
             echo "value=keepsuccess" >> $GITHUB_OUTPUT
-          elif [ ${{steps.step.outcome}} == 'success' && ${{steps.workflow.outputs.last_status}} == 'failure' ]; then
+          elif [ '${{steps.step.outcome}}' == 'success' && '${{steps.workflow.outputs.last_status}}' == 'failure' ]; then
             echo "backtonormal"
             echo "value=backtonormal" >> $GITHUB_OUTPUT
-          elif [ ${{steps.step.outcome}} == 'failure' && ${{steps.workflow.outputs.last_status}} == 'success' ]; then
+          elif [ '${{steps.step.outcome}}' == 'failure' && '${{steps.workflow.outputs.last_status}}' == 'success' ]; then
             echo "failure"
             echo "value=failure" >> $GITHUB_OUTPUT
-          elif [ ${{steps.step.outcome}} == 'failure' && ${{steps.workflow.outputs.last_status}} == 'failure' ]; then
+          elif [ '${{steps.step.outcome}}' == 'failure' && '${{steps.workflow.outputs.last_status}}' == 'failure' ]; then
             echo "keepfailure"
             echo "value=keepfailure" >> $GITHUB_OUTPUT
           else
