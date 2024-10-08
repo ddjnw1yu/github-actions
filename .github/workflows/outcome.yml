@@ -34,7 +34,7 @@ jobs:
         
       - name: Get mock step outcome
         run: |
-          echo "outcome=${{ steps.step.outcome }}" >> $GITHUB_OUTPUT
+          echo "${{ steps.step.outcome }}"
           
   check-workflow:
     runs-on: ubuntu-latest
@@ -42,7 +42,7 @@ jobs:
     needs: check-step
 
     outputs:
-      status: ${{ steps.status.value }}
+      status: ${{ steps.status.outputs.value }}
 
     steps:
       - name: Step result
@@ -60,7 +60,6 @@ jobs:
           echo "P_WORKFLOW=${{ steps.workflow.outputs.last_status }}" >> $GITHUB_ENV
 
       - name: Check
-        id: result
         run: |
           if [[ $C_STEP == 'success' && $P_WORKFLOW == 'success' ]]; then
             echo "TESTING=keepsuccess" >> $GITHUB_ENV
