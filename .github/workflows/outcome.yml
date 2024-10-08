@@ -26,7 +26,7 @@ jobs:
         id: step
         run: |
           echo "this is step 1"
-          # exit 1
+          exit 1
         continue-on-error: true
       - name: Check step
         run: |
@@ -41,28 +41,25 @@ jobs:
         run: |
             echo "P_WORKFLOW=${{ steps.workflow.outputs.last_status }}" >> $GITHUB_ENV
 
-      - name: Status
-        id: status
+      - name: Keep success
+        if: $C_STEP == 'success' && $P_WORKFLOW == 'success'
         run: |
-          if [[ $C_STEP == 'success' && $P_WORKFLOW == 'success' ]]; then
             echo "keepsuccess"
-            echo "value=keepsuccess" >> $GITHUB_ENV
-          elif [[ $C_STEP == 'success' && $P_WORKFLOW == 'failure' ]]; then
-            echo "backtonormal"
-            echo "value=backtonormal" >> $GITHUB_ENV
-          elif [[ $C_STEP == 'failure' && $P_WORKFLOW == 'success' ]]; then
-            echo "failure"
-            echo "value=failure" >> $GITHUB_ENV
-          elif [[ $C_STEP == 'failure' && $P_WORKFLOW == 'failure' ]]; then
-            echo "keepfailure"
-            echo "value=keepfailure" >> $GITHUB_ENV
-          else
-            echo "Unexpected condition. Investigation is required."
-          fi
-          
-      - name: Result
+            echo "value=keepsuccess"
+      - name: Back to normal
+        if: $C_STEP == 'success' && $P_WORKFLOW == 'failure'
         run: |
-          echo "result=${{ steps.status.value }}"
-
-      
-
+            echo "backtonormal"
+            echo "value=backtonormal"
+      - name: Failure
+        if: $C_STEP == 'failure' && $P_WORKFLOW == 'success' 
+        run: |
+            echo "failure"
+            echo "value=failure"
+            exit 1
+      - name: Keep failure
+        if: $C_STEP == 'failure' && $P_WORKFLOW == 'failure'
+        run: |
+            echo "keepfailure"
+            echo "value=keepfailure"
+            exit 1
