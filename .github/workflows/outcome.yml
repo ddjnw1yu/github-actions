@@ -50,8 +50,12 @@ jobs:
         
       - name: Failure
         if: steps.step1.outcome == 'failure' && steps.workflow.outputs.last_status == 'success'
-        run: echo "Failure"
+        run: |
+          echo "Failure"
+          exit 1
         
       - name: Still failure
         if: steps.step1.outcome == 'failure' && steps.workflow.outputs.last_status == 'failure'
-        run: echo "Still failure"
+        run: |
+          echo "Still failure"
+          exit 1
