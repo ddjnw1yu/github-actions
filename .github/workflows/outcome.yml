@@ -49,7 +49,7 @@ jobs:
 
       - name: Result
         run: |
-          echo "C_STEP=${{ needs.quality-control-cypress-run.outputs.step-outcome }}" >> $GITHUB_ENV
+          echo "C_STEP=${{ needs.check.step-outcome }}" >> $GITHUB_ENV
           echo "P_WORKFLOW=${{ steps.workflow.outputs.last_status }}" >> $GITHUB_ENV
 
       - name: Get testing status
