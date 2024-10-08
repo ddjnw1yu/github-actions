@@ -21,7 +21,7 @@ jobs:
     runs-on: ubuntu-latest
 
     outputs:
-      step-outcome: ${{ steps.step.outcome }}
+      outcome: ${{ steps.step.outcome }}
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
@@ -29,11 +29,9 @@ jobs:
         id: step
         run: |
           echo "this is step 1"
+          echo "${{ steps.step.outcome }}"
           # exit 1
         continue-on-error: true
-      - name: Check step
-        run: |
-          echo "C_STEP=${{ steps.step.outcome }}"
             
   print:
     runs-on: ubuntu-latest
@@ -41,15 +39,18 @@ jobs:
     needs: check
 
     steps:
+      - name: Step result
+        run: |
+          echo "C_STEP=${{ needs.check.outcome }}" >> $GITHUB_ENV
+          
       - name: Get previous workflow status
         uses: Mercymeilya/last-workflow-status@v0.3.3
         id: workflow
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Result
+      - name: Workflow result
         run: |
-          echo "C_STEP=${{ needs.check.step-outcome }}" >> $GITHUB_ENV
           echo "P_WORKFLOW=${{ steps.workflow.outputs.last_status }}" >> $GITHUB_ENV
 
       - name: Get testing status
