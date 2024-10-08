@@ -42,7 +42,7 @@ jobs:
     needs: check-step
 
     outputs:
-      status: ${{ steps.status.outputs.value }}
+      status: ${{ env.TESTING }}
 
     steps:
       - name: Step result
@@ -74,9 +74,8 @@ jobs:
           fi
           
       - name: Get testing status
-        id: status
         run: |
-          echo "vaule=$TESTING" >> $GITHUB_OUTPUT
+          echo "$TESTING"
 
   notify:
     runs-on: ubuntu-latest
