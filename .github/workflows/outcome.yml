@@ -72,7 +72,7 @@ jobs:
         run: echo "$TESTING"
           
       - name: Force fail
-        if: env.TESTING='failure' || env.TESTING='keepfailure'
+        if: env.TESTING == 'failure' || env.TESTING == 'keepfailure'
         run: exit 1
 
   notify:
