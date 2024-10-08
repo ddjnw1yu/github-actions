@@ -53,6 +53,11 @@ jobs:
 
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
+      - name: print
+        run: |
+          echo "outcome=${{ needs.check.outputs.outcome }}"
+          echo "workflow=${{ needs.check.outputs.workflow }}"
+          
       - name: Keep success
         if: ${{needs.check.outputs.outcome == 'success' && needs.check.outputs.workflow == 'success'}}
         run: echo "Keep success"
