@@ -23,21 +23,20 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Try to fail
-        continue-on-error: true
         run: exit 1
         
       - name: Step 1
         id: hello
-        continue-on-error: true
         run: |
           echo "this is step 1"
           echo ::set-output name=status::failure
+        continue-on-error: true
       - name: Step 2
         id: world
-        continue-on-error: true
         run: |
           echo "this is step 2" 
           echo ::set-output name=status::success
+        continue-on-error: true
       - name: Check outcomes
         run: |
           echo "step 1 = ${{ steps.hello.outcome }}"
