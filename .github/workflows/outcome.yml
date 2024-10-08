@@ -54,21 +54,21 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       - name: Keep success
-        if: needs.check.outputs.outcome == 'success' && needs.check.outputs.workflow == 'success'
+        if: ${{needs.check.outputs.outcome == 'success' && needs.check.outputs.workflow == 'success'}}
         run: echo "Keep success"
       
       - name: Back to normal
-        if: needs.check.outputs.outcome == 'success' && needs.check.outputs.workflow == 'failure'
+        if: ${{needs.check.outputs.outcome == 'success' && needs.check.outputs.workflow == 'failure'}}
         run: echo "Back to normal"
         
       - name: Failure
-        if: needs.check.outputs.outcome == 'failure' && needs.check.outputs.workflow == 'success'
+        if: ${{needs.check.outputs.outcome == 'failure' && needs.check.outputs.workflow == 'success'}}
         run: |
           echo "Failure"
           exit 1
         
       - name: Still failure
-        if: needs.check.outputs.outcome == 'failure' && needs.check.outputs.workflow == 'failure'
+        if: ${{needs.check.outputs.outcome == 'failure' && needs.check.outputs.workflow == 'failure'}}
         run: |
           echo "Still failure"
           exit 1
