@@ -33,9 +33,7 @@ jobs:
         continue-on-error: true
       - name: Check step
         run: |
-          echo "step=${{ steps.step.outcome }}"
-        env: 
-          STEP: ${{ steps.step.outcome }} 
+          echo "STEP=${{ steps.step.outcome }} >> $GITHUB_ENV
 
       - name: Get previous workflow status
         uses: Mercymeilya/last-workflow-status@v0.3.3
@@ -44,23 +42,21 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Check workflow
         run: |
-            echo "workflow=${{ steps.workflow.outputs.last_status }}"
-        env: 
-          WORKFLOW: ${{ steps.workflow.outputs.last_status }} 
+            echo "WORKFLOW=${{ steps.workflow.outputs.last_status }} >> $GITHUB_ENV
 
       - name: Testing result
         id: status
         run: |
-          if [[ ${{ secrets.STEP }} == 'success' && ${{ secrets.WORKFLOW }} == 'success' ]]; then
+          if [[ $STEP == 'success' && $WORKFLOW == 'success' ]]; then
             echo "keepsuccess"
             echo "value=keepsuccess" >> $GITHUB_OUTPUT
-          elif [[ ${{ secrets.STEP }} == 'success' && ${{ secrets.WORKFLOW }} == 'failure' ]]; then
+          elif [[ $STEP == 'success' && $WORKFLOW == 'failure' ]]; then
             echo "backtonormal"
             echo "value=backtonormal" >> $GITHUB_OUTPUT
-          elif [[ ${{ secrets.STEP }} == 'failure' && ${{ secrets.WORKFLOW }} == 'success' ]]; then
+          elif [[ $STEP == 'failure' && $WORKFLOW == 'success' ]]; then
             echo "failure"
             echo "value=failure" >> $GITHUB_OUTPUT
-          elif [[ ${{ secrets.STEP }} == 'failure' && ${{ secrets.WORKFLOW }} == 'failure' ]]; then
+          elif [[ $STEP == 'failure' && $WORKFLOW == 'failure' ]]; then
             echo "keepfailure"
             echo "value=keepfailure" >> $GITHUB_OUTPUT
           else
