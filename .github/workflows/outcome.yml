@@ -29,10 +29,13 @@ jobs:
         id: step
         run: |
           echo "this is step 1"
-          echo "${{ steps.step.outcome }}"
           # exit 1
         continue-on-error: true
-            
+        
+      - name: Print mock step outcome
+        run: |
+          echo "outcome=${{ steps.step.outcome }}"
+          
   print:
     runs-on: ubuntu-latest
 
