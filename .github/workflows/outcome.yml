@@ -63,3 +63,9 @@ jobs:
             echo "keepfailure"
             echo "value=keepfailure"
             exit 1
+      - name: Unexpected
+        if: (env.C_STEP != 'success' && env.C_STEP != 'failure') || (env.P_WORKFLOW != 'success' && env.P_WORKFLOW != 'failure')
+        run: |
+            echo "unexpected"
+            echo "value=unexpected"
+            exit 1
