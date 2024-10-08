@@ -46,23 +46,23 @@ jobs:
         run: |
           if [[ $STEP == 'success' && $WORKFLOW == 'success' ]]; then
             echo "keepsuccess"
-            echo "value=keepsuccess" >> $GITHUB_OUTPUT
+            echo "STATUS=keepsuccess" >> $GITHUB_ENV
           elif [[ $STEP == 'success' && $WORKFLOW == 'failure' ]]; then
             echo "backtonormal"
-            echo "value=backtonormal" >> $GITHUB_OUTPUT
+            echo "STATUS=backtonormal" >> $GITHUB_ENV
           elif [[ $STEP == 'failure' && $WORKFLOW == 'success' ]]; then
             echo "failure"
-            echo "value=failure" >> $GITHUB_OUTPUT
+            echo "STATUS=failure" >> $GITHUB_ENV
           elif [[ $STEP == 'failure' && $WORKFLOW == 'failure' ]]; then
             echo "keepfailure"
-            echo "value=keepfailure" >> $GITHUB_OUTPUT
+            echo "STATUS=keepfailure" >> $GITHUB_ENV
           else
             echo "Unexpected condition. Investigation is required."
           fi
           
       - name: Status
         run: |
-          echo "result=${{ steps.status.value }}"
+          echo "result=${{ $STATUS }}"
 
       
 
