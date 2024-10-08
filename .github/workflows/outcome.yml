@@ -32,37 +32,39 @@ jobs:
         run: |
           echo "C_STEP=${{ steps.step.outcome }}" >> $GITHUB_ENV
 
-      - name: Get previous workflow TESTING
-        uses: Mercymeilya/last-workflow-TESTING@v0.3.3
+      - name: Get previous workflow
+        uses: Mercymeilya/last-workflow-status@v0.3.3
         id: workflow
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Check workflow
         run: |
-            echo "P_WORKFLOW=${{ steps.workflow.outputs.last_TESTING }}" >> $GITHUB_ENV
+            echo "P_WORKFLOW=${{ steps.workflow.outputs.last_status }}" >> $GITHUB_ENV
 
-      - name: Testing result
-        id: TESTING
+      - name: Status
+        id: status
         run: |
           if [[ $C_STEP == 'success' && $P_WORKFLOW == 'success' ]]; then
             echo "keepsuccess"
-            echo "TESTING=keepsuccess" >> $GITHUB_ENV
+            echo "value=keepsuccess" >> $GITHUB_ENV
           elif [[ $C_STEP == 'success' && $P_WORKFLOW == 'failure' ]]; then
             echo "backtonormal"
-            echo "TESTING=backtonormal" >> $GITHUB_ENV
+            echo "value=backtonormal" >> $GITHUB_ENV
           elif [[ $C_STEP == 'failure' && $P_WORKFLOW == 'success' ]]; then
             echo "failure"
-            echo "TESTING=failure" >> $GITHUB_ENV
+            echo "value=failure" >> $GITHUB_ENV
+            exit 1
           elif [[ $C_STEP == 'failure' && $P_WORKFLOW == 'failure' ]]; then
             echo "keepfailure"
-            echo "TESTING=keepfailure" >> $GITHUB_ENV
+            echo "value=keepfailure" >> $GITHUB_ENV
+            exit 1
           else
             echo "Unexpected condition. Investigation is required."
           fi
           
       - name: Result
         run: |
-          echo "result=$TESTING"
+          echo "result=${{ steps.status.value }}"
 
       
 
