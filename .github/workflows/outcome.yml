@@ -59,6 +59,7 @@ jobs:
         with:
           workflow_id: "outcome.yml"
           branch: "main"
+          skip: 1
       - run: echo "${{ steps.workflow2.outputs.workflow_conclusion }}"
 
       - name: Check
