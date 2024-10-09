@@ -28,7 +28,7 @@ jobs:
         id: step
         run: |
           echo "this is step 1"
-          # exit 1
+          exit 1
         
       - name: Get mock step outcome
         run: echo "${{ steps.step.outcome }}"
@@ -59,7 +59,7 @@ jobs:
         with:
           workflow_id: "outcome.yml"
           branch: "main"
-      - run: echo "${{ toJson(steps.workflow2.outputs) }}"
+      - run: echo "${{ steps.workflow2.outputs.workflow_conclusion }}"
 
       - name: Check
         run: |
