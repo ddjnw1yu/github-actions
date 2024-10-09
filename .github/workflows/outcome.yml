@@ -59,7 +59,7 @@ jobs:
         with:
           workflow_id: "outcome.yml"
           branch: "main"
-      - run: echo "${{steps.workflow2.outputs.workflow_conclusion}}"
+      - run: echo "${{steps.workflow2.outputs}}"
 
       - name: Check
         run: |
