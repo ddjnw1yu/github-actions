@@ -58,7 +58,7 @@ jobs:
         id: workflow2
         with:
           workflow_id: "outcome.yml"
-          branch: "ddjnw1yu-patch-2"
+          branch: "main"
       - run: echo "${{ steps.workflow2.outputs.workflow_conclusion }}"
 
       - name: Check
