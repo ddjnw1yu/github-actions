@@ -53,6 +53,14 @@ jobs:
       - name: Workflow result
         run: echo "P_WORKFLOW=${{ steps.workflow.outputs.last_status }}" >> $GITHUB_ENV
 
+      - name: Get conclusion of last workflow
+        uses: pinguet62/workflow-conclusion@v1.0.0
+        id: workflow2
+        with:
+          workflow_id: "outcome.yml"
+          branch: "main"
+      - run: echo "${{steps.workflow2.outputs.workflow_conclusion}}"
+
       - name: Check
         run: |
           if [[ $C_STEP == 'success' && $P_WORKFLOW == 'success' ]]; then
